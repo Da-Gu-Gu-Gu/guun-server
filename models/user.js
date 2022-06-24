@@ -13,6 +13,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  meetingid: {
+    type: Number,
+  },
 });
 
 const User = mongoose.model("user", UserSchema);
