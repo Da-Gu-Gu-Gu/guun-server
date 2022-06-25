@@ -32,7 +32,7 @@ router.post("/signin", async (req, res) => {
       const token = jwt.sign({ id: usercheck._id }, process.env.JWT_PASS);
       return res.status(200).json({ token: token, user: usercheck });
     } else {
-      return res.status(200).json("user not found");
+      return res.status(200).json({ err: "user not found" });
     }
   } catch (error) {
     console.log(error);
