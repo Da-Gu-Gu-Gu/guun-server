@@ -3,11 +3,17 @@ const app = express();
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
+    transports: ["websocket", "polling"],
+    credentials: true,
   },
 });
 
@@ -45,6 +51,7 @@ io.on("connection", (socket) => {
 
   socket.on("addRoom", (roomId) => {
     addRooms(roomId, socket.id);
+    console.log(meetingRooms);
   });
 
   socket.on("entermeetingroom", ({ roomid, sender, text }) => {
@@ -68,4 +75,4 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(PORT, () => console.log("server is running on 5000"));
+httpServer.listen(PORT, () => console.log("server is running on 5000"));
