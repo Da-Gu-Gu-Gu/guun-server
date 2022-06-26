@@ -54,18 +54,32 @@ io.on("connection", (socket) => {
     console.log(meetingRooms);
   });
 
-  socket.on("entermeetingroom", ({ roomid, sender, text }) => {
-    const room = getRoom(roomid);
-    console.log(roomid);
+  socket.on("video", ({ user, signal }) => {
+    console.log("afdf", user);
+    io.emit(`video${user.email}`, { signal });
+  });
 
-    console.log(room);
+  // status to condition,change sender to array,
+  socket.on("entermeetingroom", ({ roomid, sender, signal }) => {
+    const room = getRoom(roomid);
+    // console.log(roomid);
+
+    // console.log(room);
     if (room) {
       io.emit(`getMessage${room.roomId}`, {
         sender,
-        text,
-        roomid,
       });
-      console.log("work");
+
+      // console.log("work");
+    } else {
+      let newroom = addRooms(roomid, socket.id);
+      // console.log(meetingRooms);
+      let nr = getRoom(roomid);
+      // console.log(nr);
+      io.emit(`getMessage${nr.roomId}`, {
+        sender,
+      });
+      // console.log(" work 2");
     }
   });
 
